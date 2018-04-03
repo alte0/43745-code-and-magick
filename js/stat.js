@@ -25,19 +25,19 @@
   var BAR_TEXT_X2 = BAR_WIDTH + BAR_GAP;
   // Начальная y координата текста
   var BAR_TEXT_Y = CLOUD_HEIGHT - 2 * FONT_GAP;
+  var TEXT_WIN = ['Ура вы победили!', 'Список результатов:'];
+  var TEXTS_WIN_FONT_SIZE = 16;
 
   var renderCloud = function (ctx, x, y, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
   };
 
-  var textsWin = ['Ура вы победили!', 'Список результатов:'];
-  var textsWinFontSize = 16;
   var renderTextWin = function (ctx, array, x, y) {
     ctx.fillStyle = '#000';
-    ctx.font = textsWinFontSize.toString() + 'px PT mono';
+    ctx.font = TEXTS_WIN_FONT_SIZE.toString() + 'px PT mono';
     for (var i = 0; i < array.length; i++) {
-      ctx.fillText(array[i], x, y + i * textsWinFontSize);
+      ctx.fillText(array[i], x, y + i * TEXTS_WIN_FONT_SIZE);
     }
   };
 
@@ -60,23 +60,19 @@
   window.renderStatistics = function (ctx, names, times) {
     renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
     renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-    renderTextWin(ctx, textsWin, CLOUD_X + 20, CLOUD_Y + 30);
+    renderTextWin(ctx, TEXT_WIN, CLOUD_X + 20, CLOUD_Y + 30);
     var maxTime = getMaxElement(times);
     var barHeightUser;
 
-    for (var i = 0; i < names.length; i++) {
+    names.forEach(function (item, i) {
       barHeightUser = BAR_HEIGHT * Math.round(times[i]) / maxTime;
 
       ctx.fillStyle = '#000';
-      ctx.fillText(names[i], BAR_TEXT_X + BAR_TEXT_X2 * i, CLOUD_HEIGHT);
+      ctx.fillText(item, BAR_TEXT_X + BAR_TEXT_X2 * i, CLOUD_HEIGHT);
       ctx.fillText(Math.round(times[i]), BAR_TEXT_X + BAR_TEXT_X2 * i, BAR_TEXT_Y - barHeightUser);
-      if (names[i] === 'Вы') {
-        ctx.fillStyle = 'rgb(255, 0, 0)';
-        renderColumn(ctx, BAR_X + BAR_X2 * i, BAR_Y - barHeightUser, BAR_WIDTH, barHeightUser);
-      } else {
-        ctx.fillStyle = 'rgba(0, 0, 255, ' + Math.random().toString() + ')';
-        renderColumn(ctx, BAR_X + BAR_X2 * i, BAR_Y - barHeightUser, BAR_WIDTH, barHeightUser);
-      }
-    }
+      ctx.fillStyle = (item === 'Вы') ? 'rgb(255, 0, 0)' : 'rgba(0, 0, 255, ' + Math.random().toString() + ')';
+      renderColumn(ctx, BAR_X + BAR_X2 * i, BAR_Y - barHeightUser, BAR_WIDTH, barHeightUser);
+    });
+
   };
 })();
